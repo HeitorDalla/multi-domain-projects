@@ -1,0 +1,35 @@
+Vagrant.configure("2") do |config|
+  # DEFINIR A BOX DO MEU AMBIENTE
+  config.vm.box = "eurolinux-vagrant/centos-stream-9"
+
+  # CONFIGURANDO A REDE PRIVADA DA VM
+  config.vm.network "private_network", ip: "192.168.56.104"
+
+  # CONFIGURANDO A REDE PÚBLICA DA VM
+  config.vm.network "public_network"
+
+  # HABILITAR UMA PASTA SINCRONIZADA ENTRE O HOST E A MAQUINA VIRTUAL
+  config.vm.synced_folder "./data", "/vagrant_data"
+
+  # CONFIGURAÇÕES DE PROVEDORES
+  config.vm.provider "virtualbox" do |vb|
+    # CONFIGURAÇÕES DE QUANTIDADE DE MEMÓRIA DA MÁQUINA VIRTUAL
+    vb.memory = "1024"
+  end
+
+  # CONFIGURAÇÕES O PROVISIONAMENTO COM UM SCRIPT SHELL (ANSIBLE, DOCKER)
+  config.vm.provision "shell", name: "httpd_setup", inline: <<-SHELL
+    # COMANDOS QUE SERÃO DENTRO DA MÁQUINA
+    yum install httpd wget unzip vim -y # O '-y' SIGNIFICA QUE NAO PRECISA CONFIRMAR CADA COMANDO DE INSTALAÇÃO
+    systemctl start httpd
+    systemctl enable httpd
+    mkdir -p /tmp/barista # O '-p' SIGNIFICA QUE SE A PASTA EXISTIR, NAO VAI DAR ERRO, MAS SE NAO EXISTIR, ELE CRIA
+    cd /tmp/barista
+    wget https://www.tooplate.com/zip-templates/2137_barista_cafe.zip
+    unzip -o 2137_barista_cafe.zip # O '-o' SIGNIFICA SE EXISTIR ARQUIVOS E VOCE DESEJA SOBRESCREVER
+    cp -r 2137_barista_cafe/* /var/www/html # O '-r' SIGNIFICA RECURSIVAMENTE, OU SEJA, VAI COPIAR TUDO
+    systemctl restart httpd
+    cd /tmp
+    rm -rf /tmp/barista
+  SHELL
+end

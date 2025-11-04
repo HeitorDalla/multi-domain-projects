@@ -1,0 +1,25 @@
+Vagrant.configure("2") do |config|  
+  # BOX UTILIZADA
+  config.vm.box = "ubuntu/jammy64"
+
+  # REDE PRIVADA DA VM
+  config.vm.network "private_network", ip: "192.168.56.14"
+
+  # REDE PUBLICA DA VM
+  config.vm.network "public_network"
+
+  # CONFIGURACOES DA VM
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1600"
+  vb.cpus = "2"
+  end
+
+  # Adionar uma pasta síncrona da minha máquina host para a maquina virtual
+  config.vm.synced_folder "./scripts", "/opt/scrips"
+
+  # PROVISIONAMENTO DA VM
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y apache2
+  SHELL
+end
