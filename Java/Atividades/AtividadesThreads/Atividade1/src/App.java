@@ -1,19 +1,21 @@
 public class App {
     public static void main(String[] args) throws Exception {
         // TRABALHAR COM PRIORIDADES (VAI DE 1 À 10) - definir prioridades diferentes paras as threads
-        A obj1 = new A();
-        B obj2 = new B();
+        Runnable obj1 = new A();
+        Runnable obj2 = new B();
 
-        obj2.setPriority(1);
+        // PARA USAR O 'RUNNABLE', PODE-SE CRIAR DUAS DIFERENTES THREADS
+        Thread t1 = new Thread(obj1);
+        Thread t2 = new Thread(obj2);
 
-        obj1.start();
-        obj2.start();
+        t1.start();
+        t2.start();
     }
 }
 
-class A extends Thread { // no momento em que extendo de Thread, a classe não é mais uma classe comum, é uma Thread
+class A implements Runnable { // no momento em que extendo de Thread, a classe não é mais uma classe comum, é uma Thread
     public void run () {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("Hi");
             try {
                 Thread.sleep(1); // definir o tempo que voce quer que essa thread fique em pausa
@@ -24,9 +26,9 @@ class A extends Thread { // no momento em que extendo de Thread, a classe não �
     }
 }
 
-class B extends Thread {
+class B implements Runnable {
     public void run () {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("Ola");
             try {
                 Thread.sleep(1); // definir o tempo que voce quer que essa thread fique em pausa
