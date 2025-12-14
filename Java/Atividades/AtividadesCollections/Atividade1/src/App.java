@@ -4,7 +4,7 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Collection<Integer> nums = new ArrayList<>();
+        Collection<Integer> nums = new ArrayList<>(); // nesse momento nao conseguimos indexar, usar metodos get e set padrao das classes
         List<Integer> nums2 = new ArrayList<>();
         // nums.add(1);
         // nums.add(2);
