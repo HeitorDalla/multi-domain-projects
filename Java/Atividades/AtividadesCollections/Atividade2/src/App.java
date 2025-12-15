@@ -16,10 +16,11 @@ public class App {
         Set<Integer> numerosOrdenados = new TreeSet<>();
         numerosOrdenados.add(4);
         numerosOrdenados.add(7);
+        numerosOrdenados.add(1);
+        numerosOrdenados.add(0);
 
         for (Integer integer : numerosOrdenados) {
             System.out.println(integer);
-        }
-        
+        }        
     }
 }
