@@ -21,10 +21,14 @@ public class App {
         // Iterator
         Iterator<Integer> values = nums.iterator();
 
+        // while (values.hasNext()) {
+        //     if (values.next().equals(4)) {
+        //         values.remove();
+        //     }
+        // }
+
         while (values.hasNext()) {
-            if (values.next().equals(4)) {
-                values.remove();
-            }
+            System.out.println(values.next());
         }
     }
 }
