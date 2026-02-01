@@ -10,12 +10,26 @@ COPY package*.json .
 # Instala dependencias e gera o `node/modules`
 RUN npm ci
 
-# Copia TODO o RESTO do projeto para `/app`
-COPY . .
+# Copia o `index.ts` e o arquivo `.json` do projeto para `/app`
+COPY src src
+COPY tsconfig.json tsconfig.json
 
 # Executa o script `build` que gera o /dist
 # Esse e o produto final do stage build, com o JavaScript pronto, codigo compilado e sem TypeScript
 RUN npm run build
+
+
+# Esse imagem ficara responsabilizada por instalar apenas as dependencias de producao
+FROM node:22-alpine AS deps
+
+# Cria e entra na pasta `/app` dentro do BUILD da `deps` (ou seja, so da para ver se eu fizer docker exec -it no container rodando)
+WORKDIR /app
+
+# Copia os arquivos .json para o BUILD da IMAGEM para MELHORA do CACHE do DOCKER
+COPY package*.json .
+
+# Instala apenas as dependencias que sao necessarias para producao (GERA O `node_modules`)
+RUN npm ci --only=production
 
 
 # Imagem que nao possui shell, npm, bash, ou seja, e uma imagem muito menor
@@ -24,11 +38,11 @@ FROM gcr.io/distroless/nodejs22-debian12
 # Cria e entra na pasta `/app` dentro do RUNTIME
 WORKDIR /app
 
-# Copia o node_modules do stage build
+# Copia o node_modules do stage `deps`
 # Nao instala nada, apenas copia
-COPY --from=build /app/node_modules node_modules
+COPY --from=deps /app/node_modules node_modules
 
-# Copia o RESULTADO do BUILD (apenas o que e necessario para rodar)
+# Copia o RESULTADO do BUILD (apenas o que e necessario para rodar a aplicacao final)
 COPY --from=build /app/dist dist
 
 # Define variaveis de ambiente (lido pelo node)
