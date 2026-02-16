@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Teste que editeiiiiiiiiiiii
+          Test
         </p>
         <a
           className="App-link"
@@ -18,7 +18,7 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> 
     </div>
   );
 }

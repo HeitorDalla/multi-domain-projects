@@ -1,0 +1,35 @@
+# Para a versao de desenvolvedor, nao precisa de um container `nginx`, 
+# porque o comando `npm start` ja inicia um servidor de desenvolvimento nos bastidores
+
+FROM node:22-alpine AS build
+
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm ci
+
+COPY . .
+
+# O que eu quero? Que quando eu mudo o codigo, eu nao tenha que ficar buildando novas imagens sempre
+# Entao eu posso tirar a parte do build, e rodar com o servidor padrao da aplicacao (sem nginx)
+# Mas para isso, nao posso usar o comando `RUN`, e sim o `CMD`, pois nao quero que o comando seja usado sempre que buildar, e sim sempre que rodar um container
+# OBS: PARA ISSO PRECISA DE COMANDOS (`npm start`) QUE POSSUEM `hot reloading`
+
+CMD [ "npm", "start" ]
+
+# docker run \
+#    --rm -d --name server -p 3000:3000 \
+#    -v ./public:/app/public \    # diz que envez de olhar para a pasta /app/public de dentro do container, olhar para `/public da minha pasta do codigo fonte`
+#    -v ./src:/app/src \
+#    server:v1
+
+
+# RUN npm run build
+
+
+# FROM nginx:1.27.0
+
+# WORKDIR /app
+
+# COPY --from=build /app/build /var/www/html
